@@ -1,137 +1,70 @@
-# Task Management System
+ Personal Productivity Tracker
 
-**Projekti Final për lëndën "Advanced Programming" me Prof. Agon Bajgora**
+Një aplikacion modern për menaxhimin e produktivitetit personal, ndërtuar me React, Node.js, Express, MongoDB dhe Docker, duke përdorur arkitekturë të bazuar në mikroshërbime.
 
-Një sistem për menaxhimin e projekteve dhe detyrave me arkitekturë mikroservisesh. Përdoruesit mund të krijojnë projekte, t'i ndajnë në detyra, të caktojnë anëtarë të ekipit dhe të ndjekin progresin përmes një paneli vizual (Kanban Board).
+---
+ Karakteristikat Kryesore
+
+- Autentifikim i sigurt (Regjistrim / Login / Logout)
+- Kanban Board (To Do, In Progress, Done) për menaxhimin vizual të detyrave
+- Time Tracker për ndjekjen e kohës për çdo detyrë
+- Njoftime në kohë reale për përditësime në projekte dhe detyra
+- Statistika mujore me grafikë për analizë të produktivitetit
 
 ---
 
-## Përmbajtja
+ Teknologjitë
 
-- [Përshkrimi i Projektit](#përshkrimi-i-projektit)
-- [Arkitektura Mikroservise](#arkitektura-mikroservise)
-- [Frontend - Aplikacioni Web](#frontend---aplikacioni-web)
-- [Baza e të Dhënave](#baza-e-të-dhënave)
-- [Infrastrukturë & Deploy](#infrastrukturë--deploy)
-- [Siguri](#siguri)
-- [Teknologjitë Kryesore](#teknologjitë-kryesore)
+- Frontend:React.js
+- Backend: Node.js + Express
+- Database:MongoDB
+- Containerization & Orchestration: Docker + Docker Compose
+- Arkitektura: Mikroshërbime
 
 ---
 
-## Përshkrimi i Projektit
+ Mikroshërbimet dhe Endpoint-et
 
-Task Management System është një platformë bashkëpunimi për menaxhimin e projekteve dhe detyrave në grup me:
+ 1. Auth Service - Autentifikimi i përdoruesve  
+Endpoints:
+- `POST /auth/signup` – Regjistrim
+- `POST /auth/login` – Kyçje
+- `POST /auth/logout` – Çkyçje
 
-- Krijim dhe menaxhim projektesh
-- Caktim detyrash për anëtarët
-- Panel Kanban për vizualizim progresi
-- Komente, njoftime dhe bashkëngjitje dokumentesh
+ 2. Task Service - Menaxhimi i detyrave  
+Endpoints:
+- `POST /tasks` – Krijim detyre
+- `GET /tasks` – Marrje detyrash
+- `PUT /tasks/:id` – Përditësim statusi
+- `DELETE /tasks/:id` – Fshirje detyre
 
----
+ 3. Project Service - Menaxhimi i projekteve  
+Endpoints:
+- `POST /projects` – Krijim projekti
+- `GET /projects` – Listim projektesh
+- `GET /projects/:id/tasks` – Detyrat e një projekti
 
-## Arkitektura Mikroservise
-
-Projekti është ndarë në 8 mikroservise të pavarura, secila me funksionalitet specifik:
-
-### 1. Auth Service
-
-- Regjistrimi dhe kyçja e përdoruesve
-- Menaxhimi i roleve (admin, anëtar)
-- Autentikimi me JWT
-
-### 2. User Service
-
-- Profili i përdoruesit
-- Menaxhimi i ekipeve (teams)
-- Kërkesat për bashkëngjitje në projekt
-
-### 3. Project Service
-
-- Krijimi dhe menaxhimi i projekteve
-- Caktimi i skuadrave
-- Strukturë e "workspace"
-
-### 4. Task Service
-
-- CRUD për detyra
-- Caktimi i përdoruesve në detyra
-- Statuset: To Do, In Progress, Done
-
-### 5. Comment Service
-
-- Komente për detyra
-- Përmendje me @username
-- Diskutime të ruajtura për çdo detyrë
-
-### 6. Notification Service
-
-- Njoftime për veprime të rëndësishme
-- Push ose email (testim)
-- Integrim me Event Bus ose WebSocket
-
-### 7. Time Tracking Service
-
-- Matja e kohës së shpenzuar për detyra
-- Start/Stop timer
-- Raporte mujore ose sipas projekti
-
-### 8. File Service
-
-- Ngarkimi i dokumenteve
-- Ruajtje lokale ose cloud (p.sh. S3, Firebase)
-- Shfaqje dhe shkarkim
+ 4. Comment Service - Komentet për detyra  
+Endpoints:
+- `POST /tasks/:taskId/comments` – Shto koment
+- `GET /tasks/:taskId/comments` – Merr komentet
+ 5. Notification Service  - Njoftime të automatizuara  
+Endpoints:
+- `POST /notifications` – Dërgo njoftim
+- `GET /notifications` – Merr njoftimet
 
 ---
 
-## Frontend - Aplikacioni Web
+  Struktura e Frontend-it (React.js)
 
-- React.js me TailwindCSS
-- Kanban Board për projektet
-- Modal për detaje të detyrave
-- Regjistrim, login, dashboard, profil përdoruesi
-
----
-
-## Baza e të Dhënave
-
-Përdoren PostgreSQL ose MongoDB, të ndara sipas shërbimeve:
-
-| Mikroservisi       | Tabela / Koleksione                     |
-|--------------------|------------------------------------------|
-| Auth               | users, credentials                       |
-| User               | profiles, teams                          |
-| Project            | projects, workspaces                     |
-| Task               | tasks, labels, assignments               |
-| Comment            | comments                                 |
-| Notification       | notifications                            |
-| Time Tracking      | task_timers                              |
-| File               | files (metadata), uploads                |
+- Login/Register Page – Për autentifikim të sigurt
+- Dashboard (Kanban) – Menaxhim vizual i detyrave
+- Timer Component – Ndjekja e kohës për detyra
+- Notifications – Pamje e njoftimeve të fundit
+- Stats Page – Grafikë dhe analiza për produktivitetin personal
 
 ---
 
-## Infrastrukturë & Deploy
+ Qëllimi i Projektit
 
-- Çdo mikroservis ka `Dockerfile` të vetin
-- Përdorimi i `docker-compose.yml` për përbërjen
-- `.env` për konfigurimet e mjediseve
-- Ndarje mes development dhe production
-
----
-
-## Siguri
-
-- JWT për autentikim
-- Role-Based Access Control (RBAC)
-- Validimi i inputeve në çdo shërbim
-- Pa kredenciale të ngulitura në kod
-
----
-
-## Teknologjitë Kryesore
-
-- **Backend:** FastAPI / Node.js
-- **Frontend:** React.js, TailwindCSS
-- **Databaza:** PostgreSQL, MongoDB
-- **Containerization:** Docker, Docker Compose
-- **Security:** JWT, RBAC
-- **Realtime:** WebSocket, Event Bus
+Ky projekt është pjesë e detyrës finale për lëndën *Advanced Programming*, dhe synon të ndërtojë një platformë të shkallëzueshme dhe funksionale për organizimin dhe matjen e produktivitetit ditor të përdoruesve përmes teknologjive moderne.
